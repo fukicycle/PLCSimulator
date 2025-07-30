@@ -42,6 +42,7 @@ public sealed class TcpServer : IDisposable
         try
         {
             using var stream = client.GetStream();
+            requestMessageReciever.SetStream(stream);
             byte[] buffer = new byte[256];
             while (true)
             {

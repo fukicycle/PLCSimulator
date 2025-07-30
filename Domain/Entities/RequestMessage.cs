@@ -9,13 +9,15 @@ public sealed class RequestMessage
         IRequestMessageValidationStrategy requestMessageValidationStrategy)
     {
         requestMessageValidationStrategy.Validate(value);
+        HeaderValue = requestMessageValidationStrategy.GetHeaderValue();
         Value = value;
         Length = value.Length;
-        PartOfData = requestMessageValidationStrategy.GetDataPart();
-        DataLength = PartOfData.Length;
+        DataValue = requestMessageValidationStrategy.GetDataValue();
+        DataLength = DataValue.Length;
     }
+    public byte[] HeaderValue { get; set; }
     public byte[] Value { get; }
     public int Length { get; }
-    public byte[] PartOfData { get; }
+    public byte[] DataValue { get; }
     public int DataLength { get; }
 }

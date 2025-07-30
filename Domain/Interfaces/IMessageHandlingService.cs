@@ -4,5 +4,5 @@ namespace Domain.Interfaces;
 
 public interface IMessageHandlingService
 {
-    void HandleMessage(RequestMessage message);
+    Task<ResponseMessage> HandleMessageAsync(RequestMessage message, Stream stream);
 }

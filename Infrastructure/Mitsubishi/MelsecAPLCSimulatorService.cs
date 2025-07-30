@@ -6,7 +6,7 @@ namespace Infrastructure.Mitsubishi;
 public sealed class MelsecAPLCSimulatorService : IPLCSimulatorService, IDisposable
 {
     private readonly TcpServer _tcpServer;
-    private readonly RequestMessageReciever _requestMessageReciever = new RequestMessageReciever();
+    private readonly RequestMessageReciever _requestMessageReciever;
     private readonly IMessageHandlingService _messageHandlingService;
     private readonly IMessageLoggerService _messageLoggerService;
     public MelsecAPLCSimulatorService(
@@ -16,6 +16,7 @@ public sealed class MelsecAPLCSimulatorService : IPLCSimulatorService, IDisposab
         _tcpServer = new TcpServer(messageLoggerService);
         _messageHandlingService = messageHandlingService;
         _messageLoggerService = messageLoggerService;
+        _requestMessageReciever = new RequestMessageReciever(_messageLoggerService);
     }
 
     public void StartPLCSimulator(int port)
@@ -28,7 +29,8 @@ public sealed class MelsecAPLCSimulatorService : IPLCSimulatorService, IDisposab
                 var requestMessage = _requestMessageReciever.GetProcessTargetMessage(out int currentSize);
                 if (requestMessage != null)
                 {
-                    _messageHandlingService.HandleMessage(requestMessage);
+                    var respnose = await _messageHandlingService.HandleMessageAsync(requestMessage, _requestMessageReciever.ClientStream!);
+                    _messageLoggerService.WriteLine($"[{port}] Send: {BitConverter.ToString(respnose.Value)}");
                     _messageLoggerService.WriteLine($"[{port}] Queue remain size: {currentSize}");
                     await Task.Delay(250);
                 }

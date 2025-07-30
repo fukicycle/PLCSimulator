@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Connections;
@@ -14,9 +15,10 @@ public sealed class MessageHandlingService : IMessageHandlingService
     {
         _requestMessageProcessorService = requestMessageProcessorService;
     }
-    public void HandleMessage(RequestMessage message)
+    public async Task<ResponseMessage> HandleMessageAsync(RequestMessage message, Stream stream)
     {
         var response = _requestMessageProcessorService.ProcessRequest(message);
-        _responseMessageSender.SendMessage(response);
+        await _responseMessageSender.SendMessageAsync(response, stream);
+        return response;
     }
 }

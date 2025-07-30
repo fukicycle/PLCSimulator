@@ -4,8 +4,8 @@ namespace Infrastructure.Connections;
 
 public sealed class ResponseMessageSender
 {
-    public void SendMessage(ResponseMessage message)
+    public async Task SendMessageAsync(ResponseMessage message, Stream stream)
     {
-        
+        await stream.WriteAsync(message.Value, 0, message.Value.Length);
     }
 }

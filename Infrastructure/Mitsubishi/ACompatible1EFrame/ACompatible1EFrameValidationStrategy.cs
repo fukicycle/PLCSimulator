@@ -15,10 +15,16 @@ public sealed class ACompatible1EFrameValidationStrategy : IRequestMessageValida
         _message = message;
     }
 
-    public byte[] GetDataPart()
+    public byte[] GetDataValue()
     {
         var startIndex = RequestMessageConst.MINIMUM_LENGTH - 1;
         var data = _message[startIndex..];
         return data;
+    }
+
+    public byte[] GetHeaderValue()
+    {
+        //Headerは先頭の1バイト
+        return [_message[0]];
     }
 }
