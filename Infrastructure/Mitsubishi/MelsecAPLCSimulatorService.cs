@@ -29,8 +29,7 @@ public sealed class MelsecAPLCSimulatorService : IPLCSimulatorService, IDisposab
                 if (requestMessage != null)
                 {
                     _messageHandlingService.HandleMessage(requestMessage);
-                    _messageLoggerService.WriteLine("Queue processed.");
-                    _messageLoggerService.WriteLine($"Queue remain size: {currentSize}");
+                    _messageLoggerService.WriteLine($"[{port}] Queue remain size: {currentSize}");
                     await Task.Delay(250);
                 }
             }
